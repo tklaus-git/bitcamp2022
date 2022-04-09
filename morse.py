@@ -47,3 +47,15 @@ while True:
     cv2.waitKey(1)
 
 
+#           1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27
+letters = ['','E','T','I','A','N','M','S','U','R','W','D','K','G','O','H','V','F','L','P','J','B','X','C','Y','Z','Q']
+
+# dots is a list of 0's and 1's; 0: short blink, 1: long blink
+def letter(dots):
+    trace = 1
+    for dot in dots:
+        if dot == 0:
+            trace = 2*trace
+        else:
+            trace = (2*trace)+1
+    return letters[trace-1]
