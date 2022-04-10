@@ -122,7 +122,7 @@ while not keyboard.is_pressed('q'):
         print(ratio)
         # Blinking detection:
         if start:
-            if ratio < 27: 
+            if ratio < 28: 
                 if blinking == 0:
                     startTime = time.perf_counter()
                     blinking = 1
