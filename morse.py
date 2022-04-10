@@ -55,6 +55,9 @@ blinking = 0 # are we blinking
 timer = time.perf_counter()
 notBlinking = 0
 
+avg_d = []
+
+
 letter = []
 word = ''
 morse = ''
@@ -119,10 +122,18 @@ while not keyboard.is_pressed('q'):
         if len(r_list)>2:
             r_list.pop(0)
         ratio = sum(r_list)/len(r_list)
-        print(ratio)
+        
         # Blinking detection:
+
+        avg_d.append(ratio)
+        if len(avg_d) > 200:
+            avg_d.pop(0)
+        avg_ratio =   sum(avg_d)/len(avg_d)
+        print(avg_ratio-ratio)
+
+
         if start:
-            if ratio < 28: 
+            if avg_ratio-ratio > 3: 
                 if blinking == 0:
                     startTime = time.perf_counter()
                     blinking = 1
@@ -131,7 +142,7 @@ while not keyboard.is_pressed('q'):
                 if blinking == 1: # end of blink
                     howLong = time.perf_counter() - startTime
                     notBlinking = time.perf_counter()
-                    if (howLong<.27): # dot
+                    if (howLong<.28): # dot
                         letter.append(0)
                         morse+= '.'
                     elif(howLong < 1):
