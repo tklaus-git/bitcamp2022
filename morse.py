@@ -7,13 +7,14 @@ from cvzone.PlotModule import LivePlot
 import mediapipe
 import time
 import keyboard
+from typing import List
 
 #           Binary Tree representation
 letters = ['','E','T','I','A','N','M','S','U','R','W','D','K','G','O','H','V','F','','L','','P','J','B','X','C','Y','Z','Q','','']
 
 
 # dots is a list of 0's and 1's; 0: short blink, 1: long blink
-def choose_letter(dots):
+def choose_letter(dots: List[int]) -> str:
     if len(dots)>4:
         return 'TOO BIG'
     trace = 1
@@ -23,15 +24,8 @@ def choose_letter(dots):
         else:
             trace = (2*trace)+1
     print(trace-1)
-    #if letters[trace-1] == '' and trace%2 == 1:
-     #   trace = (trace-1)/2
-    #elif letters[trace-1] == '' and trace%2 == 0:
-     #   trace = trace/2
         
     return letters[int(trace-1)]
-
-
-
 
 
 video = cv2.VideoCapture(1) # Opening my front camera 
@@ -55,13 +49,14 @@ blinking = 0 # are we blinking
 timer = time.perf_counter()
 notBlinking = 0
 
-avg_d = []
-
+avg_d = [] # Will keep track of the average ratio between distances within eye
 
 letter = []
 word = ''
 morse = ''
 start = False
+
+
 while not keyboard.is_pressed('q'):
     success, img = video.read()
     img, faces = detector.findFaceMesh(img, draw = False) # changed
@@ -72,6 +67,7 @@ while not keyboard.is_pressed('q'):
     
 
     if faces: # if face is detected
+        # Setting up variables related to positions
         face = faces[0]
         leftUp = face[159]
         leftDown = face[23]
