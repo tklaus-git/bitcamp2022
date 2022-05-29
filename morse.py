@@ -47,7 +47,7 @@ horList = [] # Going to keep track of distance between left and right side of ey
 r_list = []
 
 counter = 0 # Keeps track of what blink we are on
-blinking = 0 # are we blinking
+blinking = 0 # are we blinking, 1 person was bliking previous frame
 timer = time.perf_counter()
 notBlinking = 0
 
@@ -115,32 +115,32 @@ while not keyboard.is_pressed('q'):
         avg_ratio =   sum(avg_d)/len(avg_d)
 
         if start:
-            if avg_ratio-ratio > 3: 
-                if blinking == 0:
-                    startTime = time.perf_counter()
+            if avg_ratio-ratio > 3:  # Person is blinking
+                if blinking == 0: # if user is not blinking
+                    startTime = time.perf_counter() # start counting how long will remain blinking
                     blinking = 1
                     counter+=1  
 
             else: # Wasn't blinking
-                if blinking == 1: # end of blink
-                    howLong = time.perf_counter() - startTime
+                if blinking == 1: # End of blinking, meaning, previous frame user was blinking
+                    howLong = time.perf_counter() - startTime # How long was user blinking
                     notBlinking = time.perf_counter()
-                    if (howLong<.28): # dot
+                    if (howLong<.28): # SHort blink, dot
                         letter.append(0)
                         morse+= '.'
-                    elif(howLong < 1):
+                    elif(howLong < 1): # Longer blink, dash
                         letter.append(1)
                         morse+= '_'                    
-                if time.perf_counter() - notBlinking >= 1:
+                if time.perf_counter() - notBlinking >= 1: # very long blink, meaning we are done with this letter
                     # LETTER IS COMPLETE:
-                    if len(letter) < 5:
+                    if len(letter) < 5: # no letter has more than 4 dots
                         word += choose_letter(letter)
-                    letter = []
+                    letter = [] # resetting letter list and morse
                     morse = ''
 
                 blinking = 0 # not blinking
             
-        cvzone.putTextRect(img, word+morse, (100,100))
+        cvzone.putTextRect(img, word+morse, (100,100)) # displaying text
 
         # Plotting
         
@@ -151,7 +151,7 @@ while not keyboard.is_pressed('q'):
         cv2.line(img, leftUp, leftDown, (0, 200, 0), 1)
         cv2.imshow('ImagePlot', imgPlot)
         
-        if keyboard.is_pressed('r'):
+        if keyboard.is_pressed('r'): # reset
             letter = []
             morse = ''
             word = ''
